@@ -1,3 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions"   prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"        prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/tld/fn-string.tld"               prefix="fnString" %>
+<%@ taglib uri="/WEB-INF/tld/fn-code.tld"                 prefix="fnCode" %>
+<%@ taglib uri="http://jakarta.apache.org/taglibs/datetime-1.0" prefix="dt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,69 +14,229 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RemoteMonster - Simple Example</title>
   <style>
-    #mymain { 
-      margin-left: auto; margin-right: auto; width: 320px; 
-    }
-    #wingleft { 
-    }
-    #wingright { 
-    }
-    #localVideo { 
-      width: 320px; height: 240px; background-color: black; 
-    }
   </style>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+  <!-- css -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/resource/adm/css/component.css" />
+	<link rel="stylesheet" href="/resource/adm/css/main.css" />
+	<link rel="stylesheet" href="/resource/adm/css/content.css" />
+	<link rel="stylesheet" href="/resource/adm/js/plugins/jquery.mCustomScrollbar.css" />
+	<!-- //css -->
+	
+	<!-- script -->
+	<script src="/resource/adm/js/jquery-1.11.3.min.js"></script>
+	<script src="/resource/adm/js/jquery.easing.1.3.js"></script>
+	<script src="/resource/adm/js/common.js"></script>
+	<script src="/resource/adm/js/plugins/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+	<!-- //script -->
 </head>
 <body>
-  <div id="wingleft"></div>
-  <div id="mymain">
-    <h2>방송</h2>
-    <video id="localVideo" class="remote-video " autoplay muted></video>
-    <br>
-    <button id="mystart" class="btn btn-main">Start</button>
-    <button id="mystop" class="btn btn-main" disabled>Stop</button>
-  </div>
-  <div id="wingright"></div>
-
-  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@remotemonster/sdk/remon.min.js"></script>
-  <script>
-  let remon;
-
-  const config = {
-    credential: {
-      serviceId: '658b8178-5985-4c81-832a-f2f03a53b1b5',
-      key: 'fef70862a6822ae34cbea9b7f6e1c471ebe0127205c0038d7c54a04adca7fb3e'
-    },
-    view: {
-      local: '#localVideo'
-    }
-  };
-
-  const listener = {
-    onCreate(chid) { console.log(`EVENT FIRED: onCreate: ${chid}`); $('#mystart').prop( "disabled", true ); $('#mystop').prop( "disabled", false ); },
-    onJoin(chid) { console.log(`EVENT FIRED: onJoin: ${chid}`); },
-    onClose() { 
-      console.log('EVENT FIRED: onClose'); 
-      $('#mystart').prop( "disabled", false ); 
-      $('#mystop').prop( "disabled", true ); 
-      remon.close();
-      remon = new Remon({ config, listener });
-    },
-    onError(error) { console.log(`EVENT FIRED: onError: ${error}`); },
-    onStat(result) { console.log(`EVENT FIRED: onStat: ${result}`); }
-  };
-
-  remon = new Remon({ config, listener });
-
-  $('#mystop').click(function(){
-    remon.close();
-  });
-
-  $('#mystart').click(function(){
-    // createCast의 인자는 방송채널의 ID입니다. 실제 서비스에서는 동일한 방송채널의 ID가 아닌, 고유하고 예측이 어려운 ID를 사용해야합니다.
-    remon.createCast("my-first-livestreaming");
-  });
+	<div class="sub04 sub040103">
+	    <div class="top">
+	        <div class="ti_box">
+	            <strong class="tith1">라이브 방송</strong>
+	        </div>
+	    </div>
+	    <div class="steam_con">
+	        <div class="view">
+	            <div class="stream">
+	                <div class="play">
+	                    <!-- 생방송 화면 출력 -->
+	                    <video id="localVideo" class="remote-video center w-300 h-300" autoplay muted controls playsinline style="z-index:1;background: rgba(0, 0, 0, 0.5); width: 100%;"></video>
+	                    <h6 id="waitingTv" class="m-0 font-weight-bold text-primary" style="z-index:3; position: absolute;bottom: 55px;right:45px; visibility: hidden;">waiting</h6>
+	                </div>
+	                <div class="chat_con">
+						<!-- 채팅 출력창 -->
+						<div id="chatLogDiv" class="chat_body">
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p class="me"><span class="id">ME</span>채팅내용이 출력됩니다.채팅내용이 출력됩니다.채팅내용이 출력됩니다.채팅내용이 출력됩니다.채팅내용이 출력됩니다.채팅내용이 출력됩니다.</p> -->
+<!-- 							<p class="me"><span class="id">ME</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p class="me"><span class="id">ME</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p class="me"><span class="id">ME</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p class="me"><span class="id">ME</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+<!-- 							<p><span class="id">PERSON</span>채팅내용이 출력됩니다.</p> -->
+						</div>
+						<!-- //채팅창 출력창 -->
+						<!-- 채팅 입력창 -->
+						<div class="chat_form">
+							<div class="write_chat">
+								<textarea id="chatMsg" name="chat" id="chat" cols="90" rows="1"></textarea>
+								<button id="sendMessageBtn" onclick="sendMessage()" type="submit" class="submit_btn">전송</button>
+							</div>
+						</div>
+						<!-- //채팅 입력창 -->
+					</div>
+				</div>
+				<div class="live_set_con">
+				    <div class="input_form">
+				        <div class="list_date">
+				            <label for="category">카테고리 <span>*</span></label>
+				            <div class="select_box input_box">
+				                <select name="ctgryCd" id="ctgryCd" class="input_style1">
+				                    <option value="">선택</option>
+									<c:forEach var="code" items="${fnCode:getList('LIVECTGRY01') }">
+										<option value="${code.codeId}">${code.codeNm}</option>
+									</c:forEach>
+								</select>
+	                            <span class="arrow_bt"></span>
+	                        </div>
+	                    </div>
+	                    <div class="list_date">
+	                        <label for="tag">태그</label>
+	                        <div class="input_box">
+	                            <input type="text" name="chnnelTag" id="chnnelTag" placeholder="방송유형 태그를 입력해주세요." class="input_style1"/>
+	                        </div>
+	                    </div>
+	                    <div class="list_date">
+	                        <label for="title">제목</label>
+	                        <div class="input_box">
+	                        	<input id="channelNameInput" class="text-center" type="hidden">
+	                            <input type="text" name="chnnelTtlNm" id="chnnelTtlNm" placeholder="제목을 입력해주세요." class="input_style1"/>
+	                        </div>
+	                    </div>
+	                    <div class="list_date">
+	                        <label for="content">설명</label>
+	                        <div class="input_box">
+	                            <textarea name="chnnelDc" id="content" cols="50" rows="10" class="input_style1"></textarea>
+	                        </div>
+	                    </div>
+	                    <div class="list_date">
+	                        <label for="password">비밀번호</label>
+	                        <div class="input_box check_con">
+	                            <div class="check_box">
+	                                <input type="checkbox" name="secretYn" id="password_check" />
+	                                <label for="password_check">비공개</label>
+	                            </div>
+	                            <!-- 체크 시 출력 -->
+	                            <input type="password" name="chnnelPswd" id="chnnelPswd" placeholder="비밀번호를 입력해주세요." class="input_style1"/>
+	                        </div>
+	                    </div>
+	                    <div class="list_date">
+	                        <label for="url">비공개 URL</label>
+	                        <div class="input_box">
+	                            <input type="text" name="url" id="url" class="input_style1"/>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="btn_box">
+	                <button id="channelBtn" onclick="start()" class="btn btn_bace green">방송시작</button>
+    				<button id="mystop" class="btn btn_bace gray">닫기</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@remotemonster/sdk/remon.min.js"></script>
+	<script>
+		const channelNameInput = document.getElementById("channelNameInput");
+		const channelBtnEl = document.querySelector('#channelBtn');
+		const waitingTv = document.getElementById("waitingTv");
+		const sendMessageBtn = document.getElementById("sendMessageBtn");
+	    const chatLogDiv = document.getElementById("chatLogDiv");
+	    const chatMsg = document.getElementById("chatMsg");
+		let remon;
+		let isConnected = false;
+		var waitingLoop;
+        var joinChannelId;
+		
+		const config = {
+		  credential: {
+		    serviceId: '658b8178-5985-4c81-832a-f2f03a53b1b5',
+		    key: 'fef70862a6822ae34cbea9b7f6e1c471ebe0127205c0038d7c54a04adca7fb3e'
+		  },
+		  view: {
+		    local: '#localVideo'
+		  }
+		};
+		
+		const listener = {
+		  onCreate(chid) { console.log(`EVENT FIRED: onCreate: ${chid}`); $('#mystart').prop( "disabled", true ); $('#mystop').prop( "disabled", false ); },
+		  onJoin(chid) { console.log(`EVENT FIRED: onJoin: ${chid}`); },
+		  onClose() { 
+		    console.log('EVENT FIRED: onClose'); 
+		    $('#mystart').prop( "disabled", false ); 
+		    $('#mystop').prop( "disabled", true ); 
+		    remon.close();
+		    remon = new Remon({ config, listener });
+		  },
+		  onError(error) { console.log(`EVENT FIRED: onError: ${error}`); },
+		  onStat(result) { console.log(`EVENT FIRED: onStat: ${result}`); }
+		};
+		
+// 		function setViewsViaParameters(localVideoVisibility, runWaitLoop, waitingTvVisibility, btnText, inputVisiblility, isClearChatViews) {
+// 	        localVideo.style.visibility = localVideoVisibility;
+// 	        if (runWaitLoop) {
+// 	            waitingMsgLoop();
+// 	        } else {
+// 	            clearInterval(waitingLoop);
+// 	        }
+// 	        waitingTv.style.visibility = waitingTvVisibility;
+// 	        channelBtnEl.innerHTML = btnText;
+//             channelNameInput.style.visibility = inputVisiblility;
+// 	        if (isClearChatViews) {
+// 	            sendMessageBtn.style.visibility = 'hidden';
+// 	            chatMsg.style.visibility = 'hidden';
+// 	        } else {
+// 	            sendMessageBtn.style.visibility = 'visible';
+// 	            chatMsg.style.visibility = 'visible';
+// 	        }
+// 	    }
+		
+		function waitingMsgLoop() {
+	        var numOfPoint = 0;
+	        var pointStr = "";
+	        waitingLoop = setInterval(async function () {
+	            pointStr = "";
+	            numOfPoint++;
+	            if (numOfPoint === 4) numOfPoint = 0;
+	            for (var i = 0; i < numOfPoint; i++) {
+	                pointStr += ".";
+	            }
+	            waitingTv.innerText = "waiting" + pointStr;
+	        }, 1000);
+	    }
+		
+		function start() {
+		    if (isConnected) {
+		        isConnected = false;
+// 		        setViewsViaParameters('hidden', false, 'hidden', '방송시작', 'visible', true);
+		        remon.close();
+		    } else {
+		        isConnected = true;
+// 		        setViewsViaParameters('visible', true, 'visible', '방송종료', 'hidden', true);
+		        remon = new Remon({config, listener});
+		        remon.connectCall(channelNameInput.value ? channelNameInput.value : getRandomId());
+		    }
+		}
+		
+		function getRandomId() {
+		    var text = "";
+		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		    for (var i = 0; i < 5; i++)
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+		    return Date.now() + "_" + text;
+		}
+		
+		remon = new Remon({ config, listener });
+		
+		$('#mystop').click(function(){
+		  remon.close();
+		});
+		
+		$('#mystart').click(function(){
+		  // createCast의 인자는 방송채널의 ID입니다. 실제 서비스에서는 동일한 방송채널의 ID가 아닌, 고유하고 예측이 어려운 ID를 사용해야합니다.
+		  remon.createCast("my-first-livestreaming");
+		});
 
   </script>
 </body>
